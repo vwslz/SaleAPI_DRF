@@ -2,13 +2,13 @@ from rest_framework import serializers
 from sale.models import SKU, Customer, CartItem
 
 class SKUSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField(max_length=100)
-    description = serializers.CharField(max_length=500)
-    price = serializers.DecimalField(
-        min_value=1.00, max_value=100000,
-        max_digits=None, decimal_places=2,
-    )
+    # id = serializers.IntegerField(read_only=True)
+    # name = serializers.CharField(max_length=100)
+    # description = serializers.CharField(max_length=500)
+    # price = serializers.DecimalField(
+    #     min_value=1.00, max_value=100000,
+    #     max_digits=None, decimal_places=2,
+    # )
     buy = serializers.RelatedField(many=True, read_only=True)
     # photo = serializers.ImageField(default=None)
 
