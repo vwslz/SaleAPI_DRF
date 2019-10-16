@@ -1,6 +1,6 @@
 # Sale Web API - DRF
 
-App Name: Sale
+App Name: sale
 
 Interactive API documentation:
 http://127.0.0.1:8000/docs/
