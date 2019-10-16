@@ -91,7 +91,7 @@ class CartViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'], serializer_class=CartSerializer,
             url_path='customer/(?P<customer_id>[^/.]+)', name='customer-cart')
     def customer_cart(self, request, customer_id, pk=None):
-        buyer = Customer.objects.get(id=(int)(customer_id))
+        buyer = Customer.objects.all()[(int)(customer_id)-1]
         cartitems = Cart.objects.all().filter(buyer=buyer)
         # cartitems = Cart.objects.all()
         serializer = self.get_serializer(cartitems, many=True)
