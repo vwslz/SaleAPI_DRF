@@ -1,8 +1,14 @@
-# Sale Web API
+# Sale Web API - DRF
 
-Django RESTFUL Framework
 App Name: Sale
 
+Interactive API documentation:
+http://127.0.0.1:8000/docs/
+
+
+# Notes
+
+## Preparation
 ```
 INSTALLED_APPS += [
     'rest_framework',
@@ -72,17 +78,17 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 ```
 
 ## Documentation
-### Interactive API documentation
-- pip install coreapi
-- add url in project setting
+- Interactive API documentation
+  - pip install coreapi
+  - add url in project setting
 ```
 url(r'^docs/', include_docs_urls(title=API_TITLE, description=API_DESCRIPTION))
 ```
-- import url
+  - import url
 ```
 from django.conf.urls import url
 ```
-- add autosheme in project setting
+  - add autosheme in project setting
 ```
 REST_FRAMEWORK = {
    ...
@@ -91,4 +97,5 @@ REST_FRAMEWORK = {
 ```
 
 # TODO
-- customized User
+
+## customized User
