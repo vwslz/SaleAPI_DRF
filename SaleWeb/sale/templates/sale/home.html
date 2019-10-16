@@ -1,0 +1,21 @@
+{% extends 'rest_framework/base.html' %}
+
+{% block head %}
+<title>Home</title>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Profile</h1>
+    <p>Username: {{ user }}</p>
+    <p>First name: {{ user.first_name }}</p>
+    <p>Last name: {{ user.last_name }}</p>
+    <p>Numbers: {{ numbers }}</p>
+</div>
+
+<ul>
+    {% for sku in skus %}
+        <li>{{ sku.name }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

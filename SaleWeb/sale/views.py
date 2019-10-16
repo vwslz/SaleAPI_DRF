@@ -1,51 +1,96 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 
 # Create your views here.
+from idna import unicode
+from rest_framework.renderers import TemplateHTMLRenderer
 
-from sale.models import SKU
-from sale.serializers import SKUSerializer, UserSerializer
-from rest_framework import permissions
-from sale.permissions import IsOwnerOrReadOnly
-from rest_framework.decorators import api_view
+from sale.models import Product, Cart, Customer
+from sale.serializers import ProductSerializer, CustomerSerializer, CartSerializer
+from rest_framework import permissions, generics
+from sale.permissions import IsOwnerOrReadOnly, IsBuyerOrReadOnly
+from rest_framework.decorators import api_view, authentication_classes, permission_classes, action
 from rest_framework.reverse import reverse
 from django.contrib.auth.models import User
-
-from rest_framework import viewsets
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    This viewset automatically provides `list` and `detail` actions.
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-
-from rest_framework import renderers
-from rest_framework.decorators import action
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from django.shortcuts import render, HttpResponse
 from rest_framework.response import Response
 
-class SKUViewSet(viewsets.ModelViewSet):
-    """
-    This viewset automatically provides `list`, `create`, `retrieve`,
-    `update` and `destroy` actions.
-
-    Additionally we also provide an extra `highlight` action.
-    """
-    queryset = SKU.objects.all()
-    serializer_class = SKUSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly,
-                          IsOwnerOrReadOnly]
-
-    # @action(detail=True, renderer_classes=[renderers.StaticHTMLRenderer])
-    # def highlight(self, request, *args, **kwargs):
-    #     snippet = self.get_object()
-    #     return Response(snippet.highlighted)
-
-    def perform_create(self, serializer):
-        serializer.save(owner=self.request.user)
-
+# @login_required
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def api_root(request, format=None):
+
     return Response({
         'users': reverse('user-list', request=request, format=format),
-        'skus': reverse('sku-list', request=request, format=format)
+        'products': reverse('product-list', request=request, format=format),
+        'buy': reverse('buy-list', request=request, format=format)
     })
+
+'''
+Custom Pages
+'''
+def home(request, pk=None):
+    if pk:
+        user = User.objects.get(pk=pk)
+    else:
+        user = request.user
+    numbers = [1,2,3,4,5]
+    products = Product.objects.all()
+    args = {
+        'user': user,
+        'products': products,
+        'numbers' : numbers,
+    }
+
+    return render(request, 'sale/home.html', args)
+
+'''
+Additional functions
+'''
+# def register(request):
+#     if request.method == 'POST':
+#         form = RegistrationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('/account')
+#     else:
+#         form = RegistrationForm
+#         args = {'form': form}
+#         return render(request, 'sale/ ')
+
+'''
+view set
+'''
+from rest_framework import viewsets
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    # def perform_create(self, serializer):
+    #     serializer.save(owner=self.request.user)
+
+class CustomerViewSet(viewsets.ModelViewSet):
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        # permissions.IsAdminUser,
+    ]
+
+class CartViewSet(viewsets.ModelViewSet):
+    queryset = Cart.objects.all()
+    serializer_class = CartSerializer
+    permission_classes = [
+        permissions.IsAuthenticatedOrReadOnly,
+        # IsBuyerOrReadOnly,
+    ]
+
+    @action(detail=False, methods=['post'], serializer_class=CartSerializer,
+            url_path='customer/<int:customer_id>/product/<int:product_id>/quantity/<int:quantity>')
+    def buy(self, request):
+        user = Customer.objects.all().filter(id=self.request.data['customer_id'])
+        product = Product.objects.all().filter(id=self.request.data['product_id'])
+        Cart.objects.create(buyer=user, product=product, quantity=self.request.data['quantity'])
