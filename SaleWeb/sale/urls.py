@@ -10,9 +10,9 @@ Using rounter
 
 router = DefaultRouter()
 
+router.register(r'customer', CustomerViewSet)
 router.register(r'product', ProductViewSet)
 router.register(r'cart', CartViewSet)
-router.register(r'customer', CustomerViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [
