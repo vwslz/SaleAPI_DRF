@@ -25,20 +25,3 @@ class CartSerializer(serializers.ModelSerializer):
     class Meta:
         model = Cart
         fields = '__all__'
-
-    # def create(self, validated_data):
-    #     buyer_data = validated_data.pop('buyer')
-    #     buy = Buy.objects.create(**validated_data)
-    #     Customer.objects.create(buyer=buyer, **buyer_data)
-    #     return user
-
-# class LoginSerializer(serializers.Serializer):
-#     email = serializers.EmailField(
-#         max_length=100,
-#         style={'placeholder': 'Email', 'autofocus': True}
-#     )
-#     password = serializers.CharField(
-#         max_length=100,
-#         style={'input_type': 'password', 'placeholder': 'Password'}
-#     )
-#     remember_me = serializers.BooleanField()

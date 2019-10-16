@@ -88,9 +88,11 @@ class CartViewSet(viewsets.ModelViewSet):
         # IsBuyerOrReadOnly,
     ]
 
-    @action(detail=False, methods=['post'], serializer_class=CartSerializer,
-            url_path='customer/<int:customer_id>/product/<int:product_id>/quantity/<int:quantity>')
-    def buy(self, request):
-        user = Customer.objects.all().filter(id=self.request.data['customer_id'])
-        product = Product.objects.all().filter(id=self.request.data['product_id'])
-        Cart.objects.create(buyer=user, product=product, quantity=self.request.data['quantity'])
+    @action(detail=False, methods=['get'], serializer_class=CartSerializer,
+            url_path='customer/(?P<customer_id>[^/.]+)', name='customer-cart')
+    def customer_cart(self, request, customer_id, pk=None):
+        buyer = Customer.objects.all()[(int)(customer_id)-1]
+        cartitems = Cart.objects.all().filter(buyer=buyer)
+        # cartitems = Cart.objects.all()
+        serializer = self.get_serializer(cartitems, many=True)
+        return Response(serializer.data)

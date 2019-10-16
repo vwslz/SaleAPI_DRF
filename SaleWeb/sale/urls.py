@@ -2,7 +2,7 @@ from django.urls import path
 from django.conf.urls import include
 from rest_framework.routers import DefaultRouter
 from sale import views
-from sale.views import ProductViewSet, CustomerViewSet, BuyViewSet, api_root
+from sale.views import ProductViewSet, CustomerViewSet, CartViewSet, api_root
 
 '''
 Using rounter
@@ -11,7 +11,7 @@ Using rounter
 router = DefaultRouter()
 
 router.register(r'product', ProductViewSet)
-router.register(r'cart', BuyViewSet)
+router.register(r'cart', CartViewSet)
 router.register(r'customer', CustomerViewSet)
 
 # The API URLs are now determined automatically by the router.
@@ -28,7 +28,7 @@ Using path
 from django.urls import path
 from django.conf.urls import include
 from rest_framework.urlpatterns import format_suffix_patterns
-from sale.views import ProductViewSet, CustomerViewSet, BuyViewSet, api_root
+from sale.views import ProductViewSet, CustomerViewSet, CartViewSet, api_root
 from sale import views
 
 # product_list = ProductViewSet.as_view({
@@ -50,11 +50,11 @@ from sale import views
 #     'put': 'update',
 #     'delete': 'destroy'
 # })
-# buy_list = BuyViewSet.as_view({
+# cart_list = CartViewSet.as_view({
 #     'get': 'list',
 #     # 'post': 'create'
 # })
-# buy_detail = BuyViewSet.as_view({
+# cart_detail = CartViewSet.as_view({
 #     'get': 'retrieve',
 #     # 'put': 'update',
 #     'patch': 'partial_update',
@@ -68,7 +68,7 @@ from sale import views
 #     path('product/<int:pk>/', product_detail, name='product-detail'),
 #     path('user/', customer_list, name='user-list'),
 #     path('user/<int:pk>/', customer_detail, name='user-detail'),
-#     path('buy/', buy_list, name='buy-list'),
-#     path('buy/<int:pk>/', buy_detail, name='buy-detail'),
+#     path('cart/', buy_list, name='cart-list'),
+#     path('cart/<int:pk>/', cart_detail, name='cart-detail'),
 #     path('api-auth/', include('rest_framework.urls')),
 # ])
