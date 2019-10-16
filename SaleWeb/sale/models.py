@@ -23,10 +23,7 @@ class Customer(models.Model):
 class Cart(models.Model):
     # buyer = models.ForeignKey('auth.User', related_name='buyer', on_delete=models.CASCADE)
     buyer = models.ForeignKey(Customer, on_delete=models.CASCADE)
-    sku = models.ForeignKey(Product, on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
-    # buyer = models.ForeignKey(settings.AUTH_USER_MODEL, related_name='buyer', on_delete=models.CASCADE)
-    # cart = models.CharField(max_length=1000, default='{}')
-    # quantity = models.IntegerField()
 
-    unique_together = (("buyer", "sku"),)
+    unique_together = (("buyer", "product"),)

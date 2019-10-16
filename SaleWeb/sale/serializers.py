@@ -18,8 +18,8 @@ class CustomerSerializer(serializers.ModelSerializer):
 class CartSerializer(serializers.ModelSerializer):
     buyer = CustomerSerializer(many=False, read_only=True)
     buyer_id = serializers.IntegerField(read_only=False)
-    sku = ProductSerializer(many=False, read_only=True)
-    sku_id = serializers.IntegerField(read_only=False)
+    product = ProductSerializer(many=False, read_only=True)
+    product_id = serializers.IntegerField(read_only=False)
     quantity = serializers.IntegerField(min_value=1, max_value=100)
 
     class Meta:
